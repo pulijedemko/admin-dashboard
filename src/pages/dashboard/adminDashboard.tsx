@@ -1,23 +1,11 @@
-import { useEffect, useState } from "react";
-import { getCurrentUserProfile } from "../../services/userService";
 import { useAuth } from "../../context/AuthContext";
+import { useCurrentUser } from "../../hooks/useCurrentUser";
 
 const Dashboard = () => {
   const { user } = useAuth();
-  const [userProfile, setUserProfile] = useState<any>(null);
 
-  useEffect(() => {
-    const fetchProfile = async () => {
-      if (!user) return;
-
-      const data = await getCurrentUserProfile(user.id);
-      setUserProfile(data);
-    };
-
-    fetchProfile();
-  }, [user]);
-
-  console.log({ userProfile });
+  const { data: userProfile, isLoading } = useCurrentUser(user.id);
+  if (isLoading) return <div>Loading...</div>;
 
   return (
     <div className="min-h-screen bg-gray-100 flex">
