@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-interface AddUserModalProps {
+interface ModalTypeProps {
   setIsOpen: (isOpen: boolean) => void;
   onSubmit: (data: {
     id?: string;
@@ -14,13 +14,15 @@ interface AddUserModalProps {
     email: string;
     role: string;
   };
+  isEdit?: boolean;
 }
 
-const AddUserModal = ({
+const CreateUpdateModal = ({
   setIsOpen,
   onSubmit,
   initialData,
-}: AddUserModalProps) => {
+  isEdit,
+}: ModalTypeProps) => {
   initialData = initialData || {
     full_name: "",
     email: "",
@@ -93,7 +95,7 @@ const AddUserModal = ({
               type="submit"
               className="px-5 py-2 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition shadow-md"
             >
-              Add
+              {isEdit ? "Update" : "Add"}
             </button>
           </div>
         </form>
@@ -102,4 +104,4 @@ const AddUserModal = ({
   );
 };
 
-export default AddUserModal;
+export default CreateUpdateModal;

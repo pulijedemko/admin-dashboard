@@ -3,8 +3,8 @@ import { useAllUsers } from "../../hooks/user/useAllUser";
 import { useDeleteUser } from "../../hooks/user/useDeleteUser";
 import Modal from "../../components/ui/DeleteModal";
 import { useAddUser } from "../../hooks/user/useAddUser";
-import CreateUserModal from "../../components/ui/CreateUserModal";
 import { useEditUser } from "../../hooks/user/useEditUser";
+import CreateUpdateModal from "../../components/ui/CreateUpdateModal";
 
 const UserPage = () => {
   const { data: users } = useAllUsers();
@@ -138,7 +138,7 @@ const UserPage = () => {
       </div>
 
       {openModalType && (
-        <CreateUserModal
+        <CreateUpdateModal
           setIsOpen={() => setOpenModalType(null)}
           onSubmit={openModalType === "edit" ? handleEditUser : handleAddUser}
           initialData={
@@ -155,6 +155,7 @@ const UserPage = () => {
                 }
               : undefined
           }
+          isEdit={openModalType === "edit"}
         />
       )}
 
