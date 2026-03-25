@@ -2,20 +2,45 @@ import { useState } from "react";
 
 interface AddUserModalProps {
   setIsOpen: (isOpen: boolean) => void;
-  onSubmit: (data: { full_name: string; email: string; role: string }) => void;
+  onSubmit: (data: {
+    id?: string;
+    full_name: string;
+    email: string;
+    role: string;
+  }) => void;
+  initialData?: {
+    id?: string;
+    full_name: string;
+    email: string;
+    role: string;
+  };
 }
 
-const AddUserModal = ({ setIsOpen, onSubmit }: AddUserModalProps) => {
-  const [form, setForm] = useState({
+const AddUserModal = ({
+  setIsOpen,
+  onSubmit,
+  initialData,
+}: AddUserModalProps) => {
+  initialData = initialData || {
     full_name: "",
     email: "",
     role: "user",
+  };
+  const [form, setForm] = useState({
+    id: initialData?.id,
+    full_name: initialData?.full_name || "",
+    email: initialData?.email || "",
+    role: initialData?.role || "user",
   });
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+    console.log("Updated form state:", {
+      ...form,
+      [e.target.name]: e.target.value,
+    });
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -34,6 +59,7 @@ const AddUserModal = ({ setIsOpen, onSubmit }: AddUserModalProps) => {
               placeholder="Full name"
               className="border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
               onChange={handleChange}
+              value={form.full_name}
               required
             />
             <input
@@ -42,12 +68,14 @@ const AddUserModal = ({ setIsOpen, onSubmit }: AddUserModalProps) => {
               placeholder="Email"
               className="border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
               onChange={handleChange}
+              value={form.email}
               required
             />
             <select
               name="role"
               className="border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
               onChange={handleChange}
+              value={form.role}
             >
               <option value="user">User</option>
               <option value="admin">Admin</option>

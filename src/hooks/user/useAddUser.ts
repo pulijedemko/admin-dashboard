@@ -11,5 +11,8 @@ export const useAddUser = () => {
         queryKey: ["users"],
       });
     },
+    onError: (error) => {
+      console.error("Failed to add user:", error);
+    },
   });
 };

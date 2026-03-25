@@ -4,21 +4,27 @@ import { useDeleteUser } from "../../hooks/user/useDeleteUser";
 import Modal from "../../components/ui/DeleteModal";
 import { useAddUser } from "../../hooks/user/useAddUser";
 import CreateUserModal from "../../components/ui/CreateUserModal";
+import { useEditUser } from "../../hooks/user/useEditUser";
 
 const UserPage = () => {
   const { data: users } = useAllUsers();
   const deleteMutation = useDeleteUser();
+  const editMutation = useEditUser();
 
   const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
-  const [isCreateOpenModal, setIsCreateOpenModal] = useState(false);
+  const [openModalType, setOpenModalType] = useState<"add" | "edit" | null>(
+    null,
+  );
 
   const createMutation = useAddUser();
 
   const handleAddUser = (data: any) => {
-    createMutation.mutate(data, {
+    const { id, ...userData } = data; // remove id
+
+    createMutation.mutate(userData, {
       onSuccess: () => {
-        setIsCreateOpenModal(false);
+        setOpenModalType(null);
       },
     });
   };
@@ -34,6 +40,28 @@ const UserPage = () => {
     });
   };
 
+  const handleEditUser = (data: {
+    id?: string;
+    full_name: string;
+    email: string;
+    role: string;
+  }) => {
+    if (!data.id) {
+      console.error("User ID is required for editing!");
+      return;
+    }
+
+    const { id, full_name, email, role } = data;
+
+    editMutation.mutate(
+      { id: id, full_name: full_name, email, role }, // map to mutation
+      {
+        onSuccess: () => setOpenModalType(null),
+        onError: (error) => console.error("Failed to update user:", error),
+      },
+    );
+  };
+
   return (
     <div className="p-6">
       <div className="bg-white shadow-md rounded-2xl overflow-hidden">
@@ -42,7 +70,7 @@ const UserPage = () => {
           <h2 className="text-lg font-semibold">Users</h2>
           <button
             className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
-            onClick={() => setIsCreateOpenModal(true)}
+            onClick={() => setOpenModalType("add")}
           >
             + Add User
           </button>
@@ -83,7 +111,13 @@ const UserPage = () => {
                   </td>
 
                   <td className="px-6 py-4 text-right space-x-2">
-                    <button className="text-blue-600 hover:underline">
+                    <button
+                      className="text-blue-600 hover:underline"
+                      onClick={() => {
+                        setOpenModalType("edit");
+                        setSelectedUserId(user.id);
+                      }}
+                    >
                       Edit
                     </button>
 
@@ -103,10 +137,24 @@ const UserPage = () => {
         </div>
       </div>
 
-      {isCreateOpenModal && (
+      {openModalType && (
         <CreateUserModal
-          setIsOpen={setIsCreateOpenModal}
-          onSubmit={handleAddUser}
+          setIsOpen={() => setOpenModalType(null)}
+          onSubmit={openModalType === "edit" ? handleEditUser : handleAddUser}
+          initialData={
+            openModalType === "edit"
+              ? {
+                  id: selectedUserId!,
+                  full_name:
+                    users?.find((u) => u.id === selectedUserId)?.full_name ||
+                    "",
+                  email:
+                    users?.find((u) => u.id === selectedUserId)?.email || "",
+                  role:
+                    users?.find((u) => u.id === selectedUserId)?.role || "user",
+                }
+              : undefined
+          }
         />
       )}
 

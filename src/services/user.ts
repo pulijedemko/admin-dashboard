@@ -27,6 +27,31 @@ export const getAllUsers = async () => {
   return data;
 };
 
+export const editUser = async (
+  userId: string,
+  fullName: string,
+  email: string,
+  role: string,
+) => {
+  const { data, error } = await supabase
+    .from("users")
+    .update({
+      full_name: fullName,
+      email: email,
+      role: role,
+    })
+    .eq("id", userId)
+    .select()
+    .single(); // optional: returns the updated row
+
+  if (error) {
+    console.error("Error updating user:", error);
+    return null;
+  }
+
+  return data;
+};
+
 export const getCurrentUserProfile = async (userId: string) => {
   const { data, error } = await supabase
     .from("users")
