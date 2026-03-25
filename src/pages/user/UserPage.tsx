@@ -1,21 +1,34 @@
 import { useState } from "react";
 import { useAllUsers } from "../../hooks/user/useAllUser";
 import { useDeleteUser } from "../../hooks/user/useDeleteUser";
-import Modal from "../../components/ui/Modal";
+import Modal from "../../components/ui/DeleteModal";
+import { useAddUser } from "../../hooks/user/useAddUser";
+import CreateUserModal from "../../components/ui/CreateUserModal";
 
 const UserPage = () => {
   const { data: users } = useAllUsers();
   const deleteMutation = useDeleteUser();
 
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+  const [isCreateOpenModal, setIsCreateOpenModal] = useState(false);
+
+  const createMutation = useAddUser();
+
+  const handleAddUser = (data: any) => {
+    createMutation.mutate(data, {
+      onSuccess: () => {
+        setIsCreateOpenModal(false);
+      },
+    });
+  };
 
   const handleDelete = () => {
     if (!selectedUserId) return;
 
     deleteMutation.mutate(selectedUserId, {
       onSuccess: () => {
-        setIsOpen(false); // close modal
+        setIsOpenDeleteModal(false); // close modal
         setSelectedUserId(null); // reset
       },
     });
@@ -27,7 +40,10 @@ const UserPage = () => {
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b">
           <h2 className="text-lg font-semibold">Users</h2>
-          <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
+          <button
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+            onClick={() => setIsCreateOpenModal(true)}
+          >
             + Add User
           </button>
         </div>
@@ -74,7 +90,7 @@ const UserPage = () => {
                     <button
                       onClick={() => {
                         setSelectedUserId(user.id);
-                        setIsOpen(true);
+                        setIsOpenDeleteModal(true);
                       }}
                     >
                       Delete
@@ -87,7 +103,16 @@ const UserPage = () => {
         </div>
       </div>
 
-      {isOpen && <Modal setIsOpen={setIsOpen} onConfirm={handleDelete} />}
+      {isCreateOpenModal && (
+        <CreateUserModal
+          setIsOpen={setIsCreateOpenModal}
+          onSubmit={handleAddUser}
+        />
+      )}
+
+      {isOpenDeleteModal && (
+        <Modal setIsOpen={setIsOpenDeleteModal} onConfirm={handleDelete} />
+      )}
     </div>
   );
 };

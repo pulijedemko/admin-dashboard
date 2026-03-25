@@ -6,6 +6,8 @@ const Sidebar = () => {
   const { user } = useAuth();
   const { data: userProfile } = useCurrentUser(user.id);
 
+  const isAdmin = userProfile?.role === "admin";
+
   return (
     <div className="w-64 bg-[#24344f]  text-white p-6 hidden md:block">
       <h2 className="text-xl font-bold mb-8">
@@ -14,7 +16,7 @@ const Sidebar = () => {
 
       <nav className="flex flex-col gap-4">
         <Link to="">Dashboard</Link>
-        <Link to="users">Users</Link>
+        {isAdmin && <Link to="users">Users</Link>}
         <span>Settings</span>
       </nav>
     </div>
