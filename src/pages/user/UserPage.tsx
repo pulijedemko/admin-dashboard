@@ -5,6 +5,8 @@ import Modal from "../../components/ui/DeleteModal";
 import { useAddUser } from "../../hooks/user/useAddUser";
 import { useEditUser } from "../../hooks/user/useEditUser";
 import CreateUpdateModal from "../../components/ui/CreateUpdateModal";
+import FilterInputs from "../../components/ui/FilterInputs";
+import UserTable from "../../components/sections/UserTable";
 
 const UserPage = () => {
   const { data: users } = useAllUsers();
@@ -16,6 +18,18 @@ const UserPage = () => {
   const [openModalType, setOpenModalType] = useState<"add" | "edit" | null>(
     null,
   );
+  const [searchTerm, setSearchTerm] = useState("");
+  const [roleFilter, setRoleFilter] = useState("all");
+
+  const filteredUsers = users?.filter((user) => {
+    const matchesSearch =
+      user.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.email.toLowerCase().includes(searchTerm.toLowerCase());
+
+    const matchesRole = roleFilter === "all" || user.role === roleFilter;
+
+    return matchesSearch && matchesRole;
+  });
 
   const createMutation = useAddUser();
 
@@ -64,6 +78,13 @@ const UserPage = () => {
 
   return (
     <div className="p-6">
+      <FilterInputs
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        roleFilter={roleFilter}
+        setRoleFilter={setRoleFilter}
+      />
+
       <div className="bg-white shadow-md rounded-2xl overflow-hidden">
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b">
@@ -77,64 +98,12 @@ const UserPage = () => {
         </div>
 
         {/* Table */}
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm text-left">
-            <thead className="bg-gray-50 text-gray-600 uppercase text-xs">
-              <tr>
-                <th className="px-6 py-3">Full Name</th>
-                <th className="px-6 py-3">Email</th>
-                <th className="px-6 py-3">Role</th>
-                <th className="px-6 py-3 text-right">Actions</th>
-              </tr>
-            </thead>
-
-            <tbody className="divide-y">
-              {users?.map((user) => (
-                <tr key={user.id} className="hover:bg-gray-50 transition">
-                  <td className="px-6 py-4 font-medium text-gray-800">
-                    {user.full_name}
-                  </td>
-                  <td className="px-6 py-4 font-medium text-gray-800">
-                    {user.email}
-                  </td>
-
-                  <td className="px-6 py-4">
-                    <span
-                      className={`px-2 py-1 text-xs rounded-full ${
-                        user.role === "admin"
-                          ? "bg-purple-100 text-purple-700"
-                          : "bg-gray-100 text-gray-700"
-                      }`}
-                    >
-                      {user.role}
-                    </span>
-                  </td>
-
-                  <td className="px-6 py-4 text-right space-x-2">
-                    <button
-                      className="text-blue-600 hover:underline"
-                      onClick={() => {
-                        setOpenModalType("edit");
-                        setSelectedUserId(user.id);
-                      }}
-                    >
-                      Edit
-                    </button>
-
-                    <button
-                      onClick={() => {
-                        setSelectedUserId(user.id);
-                        setIsOpenDeleteModal(true);
-                      }}
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <UserTable
+          filteredUsers={filteredUsers || []}
+          setOpenModalType={setOpenModalType}
+          setSelectedUserId={setSelectedUserId}
+          setIsOpenDeleteModal={setIsOpenDeleteModal}
+        />
       </div>
 
       {openModalType && (
