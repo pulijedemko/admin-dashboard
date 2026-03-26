@@ -7,6 +7,7 @@ import { useEditUser } from "../../hooks/user/useEditUser";
 import CreateUpdateModal from "../../components/ui/CreateUpdateModal";
 import FilterInputs from "../../components/ui/FilterInputs";
 import UserTable from "../../components/sections/UserTable";
+import { useDebounce } from "../../hooks/useDebounce";
 
 const UserPage = () => {
   const { data: users } = useAllUsers();
@@ -21,10 +22,16 @@ const UserPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [roleFilter, setRoleFilter] = useState("all");
 
+  const debouncedSearchTerm = useDebounce(searchTerm, 300);
+
+  console.log("Users Data:", debouncedSearchTerm);
+
   const filteredUsers = users?.filter((user) => {
     const matchesSearch =
-      user.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchTerm.toLowerCase());
+      user.full_name
+        .toLowerCase()
+        .includes(debouncedSearchTerm.toLowerCase()) ||
+      user.email.toLowerCase().includes(debouncedSearchTerm.toLowerCase());
 
     const matchesRole = roleFilter === "all" || user.role === roleFilter;
 
