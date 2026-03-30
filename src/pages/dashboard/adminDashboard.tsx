@@ -39,7 +39,7 @@ const Dashboard = () => {
           </div>
         </div>
         <div className="bg-white my-6 p-6 rounded-xl shadow">
-          <h2 className="text-xl font-bold mb-4">User Profits</h2>
+          <h2 className="text-xl font-bold mb-4">User Profit Comparison</h2>
           <SimpleBarChart data={totalUsers ?? []} />
         </div>
         <div className="grid md:grid-cols-2 gap-3 items-stretch">
@@ -56,7 +56,7 @@ const Dashboard = () => {
           </div>
 
           <div className="flex flex-col h-full bg-white my-6 p-4 rounded-xl shadow ">
-            <h2 className="text-xl font-bold mb-4">Profit</h2>
+            <h2 className="text-xl font-bold mb-4">User Profits</h2>
 
             <div className="flex-1 flex items-center justify-center">
               <ProfitChart totalUsers={totalUsers || []} />
