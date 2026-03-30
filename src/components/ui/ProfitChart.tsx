@@ -61,7 +61,7 @@ export default function ProfitChart({ totalUsers }: ProfitChartProps) {
 
   const data = totalUsers.map((user, index) => ({
     name: user.full_name || `User ${index + 1}`,
-    profit: user.current_profit,
+    current_profit: user.current_profit,
     // Just a placeholder value for the bar height
   }));
 
@@ -69,8 +69,8 @@ export default function ProfitChart({ totalUsers }: ProfitChartProps) {
     <BarChart
       style={{
         width: "100%",
-        maxWidth: "1200px",
-        maxHeight: "70vh",
+        maxWidth: "700px",
+        maxHeight: "100vh",
         aspectRatio: 1.618,
       }}
       responsive
@@ -86,7 +86,12 @@ export default function ProfitChart({ totalUsers }: ProfitChartProps) {
       <Tooltip cursor={{ fillOpacity: 0.5 }} />
       <XAxis dataKey="name" />
       <YAxis width="auto" />
-      <Bar dataKey="profit" fill="#8884d8" shape={TriangleBar} activeBar>
+      <Bar
+        dataKey="current_profit"
+        fill="#8884d8"
+        shape={TriangleBar}
+        activeBar
+      >
         <LabelList content={CustomColorLabel} position="top" />
       </Bar>
     </BarChart>

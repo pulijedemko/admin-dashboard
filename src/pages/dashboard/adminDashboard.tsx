@@ -1,3 +1,4 @@
+import SimpleBarChart from "../../components/ui/CompareProfitChart";
 import ProfitChart from "../../components/ui/ProfitChart";
 import RoleDistributionChart from "../../components/ui/RoleDistributionChart";
 import { useAuth } from "../../context/AuthContext";
@@ -39,16 +40,27 @@ const Dashboard = () => {
         </div>
         <div className="bg-white my-6 p-6 rounded-xl shadow">
           <h2 className="text-xl font-bold mb-4">User Profits</h2>
-          <ProfitChart totalUsers={totalUsers || []} />
+          <SimpleBarChart data={totalUsers ?? []} />
         </div>
-        <div className="md:flex justify-between  items-center bg-white my-6 p-6 rounded-xl shadow">
-          <div className="w-full md:w-1/2">
-            <h2 className="text-xl font-bold ">Role Distribution</h2>
-            <RoleDistributionChart
-              isAnimationActive={true}
-              adminCount={adminCount}
-              userCount={userCount}
-            />
+        <div className="grid md:grid-cols-2 gap-3 items-stretch">
+          <div className="flex flex-col h-full bg-white my-6 p-4 rounded-xl shadow ">
+            <h2 className="text-xl font-bold mb-4">Role Distribution</h2>
+
+            <div className="flex-1 flex items-center justify-center">
+              <RoleDistributionChart
+                isAnimationActive={true}
+                adminCount={adminCount}
+                userCount={userCount}
+              />
+            </div>
+          </div>
+
+          <div className="flex flex-col h-full bg-white my-6 p-4 rounded-xl shadow ">
+            <h2 className="text-xl font-bold mb-4">Profit</h2>
+
+            <div className="flex-1 flex items-center justify-center">
+              <ProfitChart totalUsers={totalUsers || []} />
+            </div>
           </div>
         </div>
       </div>
