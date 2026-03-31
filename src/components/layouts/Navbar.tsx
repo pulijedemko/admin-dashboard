@@ -1,5 +1,4 @@
 import Logo from "../../assets/react.svg";
-import userLogo from "../../assets/user.svg";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { supabase } from "../../services/supabaseClient";
@@ -25,7 +24,6 @@ export const Navbar = () => {
       {/* Right side */}
       {user ? (
         <div className="flex items-center gap-4">
-          <img src={userLogo} alt="user" className="h-10 w-10" />
           <button
             onClick={handleLogout}
             className="text-white hover:text-red-400 transition"

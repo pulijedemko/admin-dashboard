@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface ModalTypeProps {
   setIsOpen: (isOpen: boolean) => void;
@@ -23,59 +23,73 @@ const CreateUpdateModal = ({
   initialData,
   isEdit,
 }: ModalTypeProps) => {
-  initialData = initialData || {
+  const [form, setForm] = useState({
+    id: "",
     full_name: "",
     email: "",
     role: "user",
-  };
-  const [form, setForm] = useState({
-    id: initialData?.id,
-    full_name: initialData?.full_name || "",
-    email: initialData?.email || "",
-    role: initialData?.role || "user",
   });
+
+  useEffect(() => {
+    if (initialData) {
+      setForm({
+        id: initialData.id || "", // ✅ ensure string
+        full_name: initialData.full_name,
+        email: initialData.email,
+        role: initialData.role,
+      });
+    } else {
+      setForm({
+        id: "",
+        full_name: "",
+        email: "",
+        role: "user",
+      });
+    }
+  }, [initialData]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     setForm({ ...form, [e.target.name]: e.target.value });
-    console.log("Updated form state:", {
-      ...form,
-      [e.target.name]: e.target.value,
-    });
   };
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault(); // prevent page reload
+    e.preventDefault();
     onSubmit(form);
   };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
-      <div className="bg-white rounded-2xl shadow-2xl w-96 max-w-full p-6 animate-fade-in">
-        <h2 className="text-2xl font-semibold text-gray-800 mb-5">Add User</h2>
+      <div className="bg-white rounded-2xl shadow-2xl w-96 max-w-full p-6">
+        <h2 className="text-2xl font-semibold mb-5">
+          {isEdit ? "Edit User" : "Add User"}
+        </h2>
+
         <form onSubmit={handleSubmit}>
           <div className="flex flex-col gap-4">
             <input
               name="full_name"
               placeholder="Full name"
-              className="border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+              className="border rounded-lg p-3 focus:ring-2 focus:ring-blue-500"
               onChange={handleChange}
               value={form.full_name}
               required
             />
+
             <input
               name="email"
               type="email"
               placeholder="Email"
-              className="border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+              className="border rounded-lg p-3 focus:ring-2 focus:ring-blue-500"
               onChange={handleChange}
               value={form.email}
               required
             />
+
             <select
               name="role"
-              className="border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+              className="border rounded-lg p-3"
               onChange={handleChange}
               value={form.role}
             >
@@ -83,17 +97,20 @@ const CreateUpdateModal = ({
               <option value="admin">Admin</option>
             </select>
           </div>
+
           <div className="flex justify-end gap-3 mt-6">
             <button
               type="button"
               onClick={() => setIsOpen(false)}
-              className="px-4 py-2 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 transition"
+              className="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300"
             >
               Cancel
             </button>
+
             <button
               type="submit"
-              className="px-5 py-2 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition shadow-md"
+              className="px-5 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 disabled:bg-gray-300"
+              disabled={!form.full_name || !form.email}
             >
               {isEdit ? "Update" : "Add"}
             </button>

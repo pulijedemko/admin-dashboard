@@ -8,6 +8,7 @@ import Dashboard from "./pages/dashboard/adminDashboard";
 import AdminLayout from "./components/layouts/AdminLayout";
 import UserPage from "./pages/user/UserPage";
 import PublicLayout from "./components/layouts/PublicLayout";
+import ProfilePage from "./pages/ProfilePage";
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
           >
             <Route index element={<Dashboard />} />
             <Route path="users" element={<UserPage />} />
+            <Route path="profile" element={<ProfilePage />} />
           </Route>
         </Route>
       </Routes>

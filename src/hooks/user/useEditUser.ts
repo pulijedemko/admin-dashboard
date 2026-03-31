@@ -19,6 +19,8 @@ export const useEditUser = () => {
     onSuccess: () => {
       // Invalidate the "users" query so React Query refetches the updated list
       queryClient.invalidateQueries({ queryKey: ["users"] });
+      // Optionally, invalidate the current user's profile if it was edited
+      queryClient.invalidateQueries({ queryKey: ["userProfile"] });
     },
     onError: (error) => {
       console.error("Failed to edit user:", error);
