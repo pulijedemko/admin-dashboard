@@ -12,40 +12,40 @@ const Dashboard = () => {
   const userCount = totalUsers?.filter((u) => u.role === "user").length || 0;
 
   return (
-    <div className="min-h-screen bg-gray-100 flex">
-      {/* Sidebar */}
-
-      {/* Main Content */}
-      <div className="flex-1 p-10">
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 flex text-gray-900 dark:text-gray-100 transition-colors duration-300 p-10">
+      <div className="flex-1 ">
         <h1 className="text-3xl font-bold mb-6">
           Welcome {user?.user_metadata?.full_name}
         </h1>
 
         {/* Cards Section */}
         <div className="grid md:grid-cols-3 gap-6">
-          <div className="bg-white p-6 rounded-xl shadow">
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow">
             <h3 className="text-lg font-semibold">Total Users</h3>
             <p className="text-2xl font-bold">{totalUsers?.length}</p>
           </div>
 
-          <div className="bg-white p-6 rounded-xl shadow">
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow">
             <h3 className="text-lg font-semibold">Admin</h3>
             <p className="text-2xl font-bold">{adminCount}</p>
           </div>
 
-          <div className="bg-white p-6 rounded-xl shadow">
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow">
             <h3 className="text-lg font-semibold">Users</h3>
             <p className="text-2xl font-bold">{userCount}</p>
           </div>
         </div>
-        <div className="bg-white my-6 p-6 rounded-xl shadow">
+
+        {/* Profit Comparison Chart */}
+        <div className="bg-white dark:bg-gray-800 my-6 p-6 rounded-xl shadow">
           <h2 className="text-xl font-bold mb-4">User Profit Comparison</h2>
           <SimpleBarChart data={totalUsers ?? []} />
         </div>
-        <div className="grid md:grid-cols-2 gap-3 items-stretch">
-          <div className="flex flex-col h-full bg-white my-6 p-4 rounded-xl shadow ">
-            <h2 className="text-xl font-bold mb-4">Role Distribution</h2>
 
+        {/* Role & Profit Charts */}
+        <div className="grid md:grid-cols-2 gap-3 items-stretch">
+          <div className="flex flex-col h-full bg-white dark:bg-gray-800 my-6 p-4 rounded-xl shadow">
+            <h2 className="text-xl font-bold mb-4">Role Distribution</h2>
             <div className="flex-1 flex items-center justify-center">
               <RoleDistributionChart
                 isAnimationActive={true}
@@ -55,9 +55,8 @@ const Dashboard = () => {
             </div>
           </div>
 
-          <div className="flex flex-col h-full bg-white my-6 p-4 rounded-xl shadow ">
+          <div className="flex flex-col h-full bg-white dark:bg-gray-800 my-6 p-4 rounded-xl shadow">
             <h2 className="text-xl font-bold mb-4">User Profits</h2>
-
             <div className="flex-1 flex items-center justify-center">
               <ProfitChart totalUsers={totalUsers || []} />
             </div>

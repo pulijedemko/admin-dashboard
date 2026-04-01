@@ -4,7 +4,7 @@ import { useAuth } from "../context/AuthContext";
 import { useCurrentUser } from "../hooks/user/useCurrentUser";
 import { useEditUser } from "../hooks/user/useEditUser";
 
-const SettingsPage = () => {
+const ProfilePage = () => {
   const { user } = useAuth();
   const { data: getProfile, isLoading } = useCurrentUser(user?.id);
   const editMutation = useEditUser();
@@ -18,7 +18,7 @@ const SettingsPage = () => {
     role: "",
   });
 
-  // ✅ Sync profile → form
+  // Sync profile → form
   useEffect(() => {
     if (getProfile) {
       setForm({
@@ -33,7 +33,7 @@ const SettingsPage = () => {
   if (!user || isLoading || !getProfile) {
     return (
       <div className="w-full flex justify-center mt-10">
-        <p className="text-gray-500">Loading user...</p>
+        <p className="text-gray-500 dark:text-gray-400">Loading user...</p>
       </div>
     );
   }
@@ -48,10 +48,8 @@ const SettingsPage = () => {
   const isChanged =
     form.full_name !== getProfile.full_name || form.email !== getProfile.email;
 
-  // ✅ FORM SUBMIT (instead of handleSave)
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
     if (!isChanged) return;
 
     editMutation.mutate(
@@ -62,9 +60,7 @@ const SettingsPage = () => {
         role: form.role,
       },
       {
-        onSuccess: () => {
-          setIsEditing(false);
-        },
+        onSuccess: () => setIsEditing(false),
       },
     );
   };
@@ -83,27 +79,35 @@ const SettingsPage = () => {
     <div className="w-full md:w-1/2 mx-auto mt-10">
       <form
         onSubmit={handleSubmit}
-        className="p-6 flex flex-col rounded-2xl bg-white shadow-md gap-6"
+        className="p-6 flex flex-col rounded-2xl bg-white dark:bg-gray-800 shadow-md gap-6 transition-colors duration-300"
       >
         {/* Avatar */}
         <div className="flex flex-col items-center gap-3">
-          <img src={userAvatar} alt="User Avatar" className="w-40 h-40" />
-          <p className="text-sm text-gray-500">Profile Picture</p>
+          <img
+            src={userAvatar}
+            alt="User Avatar"
+            className="w-40 h-40 rounded-full border border-gray-200 dark:border-gray-600"
+          />
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            Profile Picture
+          </p>
         </div>
 
         {/* Full Name */}
         <div>
-          <h3 className="text-sm text-gray-500 mb-1">Full Name</h3>
+          <h3 className="text-sm text-gray-500 dark:text-gray-400 mb-1">
+            Full Name
+          </h3>
           {isEditing ? (
             <input
               name="full_name"
               value={form.full_name}
               onChange={handleChange}
               required
-              className="w-full border rounded-lg p-3 focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-300 dark:border-gray-600 rounded-lg p-3 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 transition-colors"
             />
           ) : (
-            <p className="text-lg font-medium text-gray-800">
+            <p className="text-lg font-medium text-gray-800 dark:text-gray-100">
               {getProfile.full_name}
             </p>
           )}
@@ -111,7 +115,9 @@ const SettingsPage = () => {
 
         {/* Email */}
         <div>
-          <h3 className="text-sm text-gray-500 mb-1">Email</h3>
+          <h3 className="text-sm text-gray-500 dark:text-gray-400 mb-1">
+            Email
+          </h3>
           {isEditing ? (
             <input
               name="email"
@@ -119,10 +125,10 @@ const SettingsPage = () => {
               value={form.email}
               onChange={handleChange}
               required
-              className="w-full border rounded-lg p-3 focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-300 dark:border-gray-600 rounded-lg p-3 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 transition-colors"
             />
           ) : (
-            <p className="text-lg font-medium text-gray-800">
+            <p className="text-lg font-medium text-gray-800 dark:text-gray-100">
               {getProfile.email}
             </p>
           )}
@@ -130,8 +136,12 @@ const SettingsPage = () => {
 
         {/* Role (read-only) */}
         <div>
-          <h3 className="text-sm text-gray-500 mb-1">Role</h3>
-          <p className="text-lg font-medium text-gray-800">{getProfile.role}</p>
+          <h3 className="text-sm text-gray-500 dark:text-gray-400 mb-1">
+            Role
+          </h3>
+          <p className="text-lg font-medium text-gray-800 dark:text-gray-100">
+            {getProfile.role}
+          </p>
         </div>
 
         {/* Actions */}
@@ -139,20 +149,20 @@ const SettingsPage = () => {
           {isEditing ? (
             <>
               <button
-                type="button" // ✅ important
+                type="button"
                 onClick={handleCancel}
-                className="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300"
+                className="px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors"
               >
                 Cancel
               </button>
 
               <button
-                type="submit" // ✅ form submit
+                type="submit"
                 disabled={!isChanged || editMutation.isPending}
-                className={`px-5 py-2 rounded-lg text-white transition ${
+                className={`px-5 py-2 rounded-lg text-white transition-colors ${
                   isChanged
                     ? "bg-blue-600 hover:bg-blue-700"
-                    : "bg-gray-300 cursor-not-allowed"
+                    : "bg-gray-400 cursor-not-allowed"
                 }`}
               >
                 {editMutation.isPending ? "Saving..." : "Save"}
@@ -162,7 +172,7 @@ const SettingsPage = () => {
             <button
               type="button"
               onClick={() => setIsEditing(true)}
-              className="px-5 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700"
+              className="px-5 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors"
             >
               Edit Profile
             </button>
@@ -173,4 +183,4 @@ const SettingsPage = () => {
   );
 };
 
-export default SettingsPage;
+export default ProfilePage;

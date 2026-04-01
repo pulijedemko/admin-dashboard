@@ -13,6 +13,7 @@ const UserPage = () => {
   const { data: users } = useAllUsers();
   const deleteMutation = useDeleteUser();
   const editMutation = useEditUser();
+  const createMutation = useAddUser();
 
   const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
@@ -23,8 +24,6 @@ const UserPage = () => {
   const [roleFilter, setRoleFilter] = useState("all");
 
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
-
-  console.log("Users Data:", debouncedSearchTerm);
 
   const filteredUsers = users?.filter((user) => {
     const matchesSearch =
@@ -38,15 +37,11 @@ const UserPage = () => {
     return matchesSearch && matchesRole;
   });
 
-  const createMutation = useAddUser();
-
   const handleAddUser = (data: any) => {
-    const { id, ...userData } = data; // remove id
+    const { id, ...userData } = data;
 
     createMutation.mutate(userData, {
-      onSuccess: () => {
-        setOpenModalType(null);
-      },
+      onSuccess: () => setOpenModalType(null),
     });
   };
 
@@ -55,8 +50,8 @@ const UserPage = () => {
 
     deleteMutation.mutate(selectedUserId, {
       onSuccess: () => {
-        setIsOpenDeleteModal(false); // close modal
-        setSelectedUserId(null); // reset
+        setIsOpenDeleteModal(false);
+        setSelectedUserId(null);
       },
     });
   };
@@ -67,35 +62,32 @@ const UserPage = () => {
     email: string;
     role: string;
   }) => {
-    if (!data.id) {
-      console.error("User ID is required for editing!");
-      return;
-    }
-
-    const { id, full_name, email, role } = data;
+    if (!data.id) return;
 
     editMutation.mutate(
-      { id: id, full_name: full_name, email, role }, // map to mutation
       {
-        onSuccess: () => setOpenModalType(null),
-        onError: (error) => console.error("Failed to update user:", error),
+        id: data.id,
+        full_name: data.full_name,
+        email: data.email,
+        role: data.role,
       },
+      { onSuccess: () => setOpenModalType(null) },
     );
   };
 
   return (
-    <div className="p-6">
+    <div className="p-6 min-h-screen bg-gray-100 dark:bg-gray-900 transition-colors duration-300">
       <FilterInputs
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
         roleFilter={roleFilter}
         setRoleFilter={setRoleFilter}
       />
-
-      <div className="bg-white shadow-md rounded-2xl overflow-hidden">
-        {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b">
-          <h2 className="text-lg font-semibold">Users</h2>
+      <div className="bg-white dark:bg-gray-800 shadow-md rounded-2xl overflow-hidden transition-colors duration-300">
+        <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+            Users
+          </h2>
           <button
             className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
             onClick={() => setOpenModalType("add")}
@@ -104,7 +96,6 @@ const UserPage = () => {
           </button>
         </div>
 
-        {/* Table */}
         <UserTable
           filteredUsers={filteredUsers || []}
           setOpenModalType={setOpenModalType}
@@ -112,7 +103,7 @@ const UserPage = () => {
           setIsOpenDeleteModal={setIsOpenDeleteModal}
         />
       </div>
-
+      ={" "}
       {openModalType && (
         <CreateUpdateModal
           setIsOpen={() => setOpenModalType(null)}
@@ -134,7 +125,6 @@ const UserPage = () => {
           isEdit={openModalType === "edit"}
         />
       )}
-
       {isOpenDeleteModal && (
         <Modal setIsOpen={setIsOpenDeleteModal} onConfirm={handleDelete} />
       )}
