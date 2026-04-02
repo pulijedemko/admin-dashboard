@@ -1,12 +1,12 @@
 import { Link, useLocation } from "react-router-dom";
 import { useCurrentUser } from "../../hooks/user/useCurrentUser";
 import { useAuth } from "../../context/AuthContext";
-import userLogo from "../../assets/icons/user.png";
 
 const Sidebar = () => {
   const { user } = useAuth();
   const { data: userProfile } = useCurrentUser(user.id);
   const location = useLocation();
+  const { data: getProfile } = useCurrentUser(user?.id);
 
   const isAdmin = userProfile?.role === "admin";
 
@@ -52,7 +52,11 @@ const Sidebar = () => {
           to="/dashboard/profile"
           className={linkStyle("/dashboard/profile")}
         >
-          <img src={userLogo} alt="user" className="h-6 w-6" />
+          <img
+            src={getProfile?.avatar || "/default-avatar.png"}
+            alt="Profile"
+            className="w-10 h-10 rounded-full object-cover border border-gray-200 dark:border-gray-600"
+          />
           Profile
         </Link>
       </div>
