@@ -8,6 +8,7 @@ import CreateUpdateModal from "../../components/ui/CreateUpdateModal";
 import FilterInputs from "../../components/ui/FilterInputs";
 import UserTable from "../../components/sections/UserTable";
 import { useDebounce } from "../../hooks/useDebounce";
+import { toast } from "react-toastify";
 
 const UserPage = () => {
   const { data: users } = useAllUsers();
@@ -41,7 +42,9 @@ const UserPage = () => {
     const { id, ...userData } = data;
 
     createMutation.mutate(userData, {
-      onSuccess: () => setOpenModalType(null),
+      onSuccess: () => {
+        (setOpenModalType(null), toast.success("User added successfully!"));
+      },
     });
   };
 
@@ -52,6 +55,7 @@ const UserPage = () => {
       onSuccess: () => {
         setIsOpenDeleteModal(false);
         setSelectedUserId(null);
+        toast.success("User deleted successfully!");
       },
     });
   };
@@ -71,7 +75,12 @@ const UserPage = () => {
         email: data.email,
         role: data.role,
       },
-      { onSuccess: () => setOpenModalType(null) },
+      {
+        onSuccess: () => {
+          setOpenModalType(null);
+          toast.success("User updated successfully!");
+        },
+      },
     );
   };
 

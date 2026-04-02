@@ -3,6 +3,7 @@ import userAvatar from "../assets/icons/user.png";
 import { useAuth } from "../context/AuthContext";
 import { useCurrentUser } from "../hooks/user/useCurrentUser";
 import { useEditUser } from "../hooks/user/useEditUser";
+import { toast } from "react-toastify";
 
 const ProfilePage = () => {
   const { user } = useAuth();
@@ -60,7 +61,10 @@ const ProfilePage = () => {
         role: form.role,
       },
       {
-        onSuccess: () => setIsEditing(false),
+        onSuccess: () => {
+          setIsEditing(false);
+          toast.success("Profile updated successfully!");
+        },
       },
     );
   };
