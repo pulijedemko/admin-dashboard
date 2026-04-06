@@ -45,8 +45,6 @@ export const Navbar = () => {
         </div>
       ) : (
         <div className="flex gap-4 items-center">
-          <DarkModeToggle />
-
           <Link
             to="/signin"
             className="text-gray-700 dark:text-gray-300 hover:text-blue-500 transition"
