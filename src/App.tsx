@@ -8,9 +8,10 @@ import Dashboard from "./pages/dashboard/adminDashboard";
 import AdminLayout from "./components/layouts/AdminLayout";
 import UserPage from "./pages/user/UserPage";
 import PublicLayout from "./components/layouts/PublicLayout";
-import ProfilePage from "./pages/ProfilePage";
+import ProfilePage from "./pages/user/ProfilePage";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import NotFound from "./pages/NotFound";
 function App() {
   return (
     <>
@@ -35,6 +36,7 @@ function App() {
               <Route path="profile" element={<ProfilePage />} />
             </Route>
           </Route>
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
       <ToastContainer position="top-right" autoClose={3000} />

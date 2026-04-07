@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { useAuth } from "../context/AuthContext";
-import { useCurrentUser } from "../hooks/user/useCurrentUser";
-import { useEditUser } from "../hooks/user/useEditUser";
-import { useUploadAvatar } from "../hooks/user/useUploadAvatar";
+import { useAuth } from "../../context/AuthContext";
+import { useCurrentUser } from "../../hooks/user/useCurrentUser";
+import { useEditUser } from "../../hooks/user/useEditUser";
+import { useUploadAvatar } from "../../hooks/user/useUploadAvatar";
 
 const ProfilePage = () => {
   const { user } = useAuth();
