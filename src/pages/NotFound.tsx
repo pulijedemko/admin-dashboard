@@ -9,7 +9,7 @@ export default function NotFound() {
       </p>
 
       <Link
-        to="/"
+        to="/dashboard"
         className="mt-6 inline-block bg-black text-white px-6 py-3 rounded-xl hover:bg-gray-800 transition"
       >
         Go back home
