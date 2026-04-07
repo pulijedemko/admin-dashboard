@@ -1,3 +1,4 @@
+import * as XLSX from "xlsx";
 import { useState } from "react";
 import { toast } from "react-toastify";
 
@@ -87,6 +88,27 @@ const UserPage = () => {
     });
   };
 
+  const handleDownloadUsers = () => {
+    if (!filteredUsers || filteredUsers.length === 0) {
+      toast.info("No users to download");
+      return;
+    }
+
+    // Map users to a simple object array
+    const dataToExport = filteredUsers.map((user) => ({
+      Name: user.full_name,
+      Email: user.email,
+      Role: user.role,
+      Profit: user.profit || "", // optional column if exists
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(dataToExport);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Users");
+
+    XLSX.writeFile(workbook, "users.xlsx");
+  };
+
   return (
     <div className="p-6 min-h-screen bg-gray-100 dark:bg-gray-900 transition-colors duration-300">
       {/* Filter Inputs */}
@@ -110,6 +132,14 @@ const UserPage = () => {
               onClick={() => setOpenModalType("add")}
             >
               + Add User
+            </button>
+
+            {/* Download button */}
+            <button
+              className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition"
+              onClick={handleDownloadUsers}
+            >
+              Download Users
             </button>
           </div>
         </div>
