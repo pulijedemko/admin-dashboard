@@ -1,77 +1,205 @@
-<<<<<<< HEAD
-# React + TypeScript + Vite
+# 🧑‍💼 Admin Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern admin dashboard built with **React, Vite, TypeScript, Tailwind CSS, and Supabase**.
+Designed for performance, scalability, and a clean developer experience.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Features
 
-## React Compiler
+- ⚡ Fast development with Vite
+- 🟦 Fully typed with TypeScript
+- 🎨 Styled using Tailwind CSS
+- 🔐 Authentication & backend powered by Supabase
+- 🛡️ Role-based access control (RBAC)
+- 🌙 Dark mode support
+- 📊 Interactive charts with Recharts
+- 🔄 Data fetching & caching using React Query
+- 🔔 Toast notifications
+- 🧭 Client-side routing with React Router
+- ❌ Custom 404 page handling
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## 🛠️ Tech Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **Frontend:** React 19 + Vite + TypeScript
+- **Styling:** Tailwind CSS
+- **Backend:** Supabase
+- **State Management:** React Query
+- **Routing:** React Router DOM
+- **Charts:** Recharts
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+---
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## 🔐 Role-Based Access Control
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+The application implements RBAC to restrict access based on user roles.
+
+Example roles:
+
+- **Admin** → Full access
+- **User** → Read-only or restricted access
+
+Routes and UI components are protected accordingly.
+
+---
+
+## 🌙 Dark Mode
+
+- Toggle between light and dark themes
+- Persisted user preference (e.g., localStorage)
+- Fully styled using Tailwind CSS
+
+---
+
+## 📦 Installation
+
+Clone the repository:
+
+```bash
+git clone https://github.com/your-username/admin-dashboard.git
+cd admin-dashboard
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Install dependencies:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
 ```
-=======
-# admin-dashboard
->>>>>>> 44a52fda9222be16a050183f42d99b8dffb89f98
+
+---
+
+## 💻 Development
+
+Run the development server:
+
+```bash
+npm run dev
+```
+
+App will be available at:
+
+```
+http://localhost:5173
+```
+
+---
+
+## 🏗️ Build
+
+Create a production build:
+
+```bash
+npm run build
+```
+
+Preview the production build:
+
+```bash
+npm run preview
+```
+
+---
+
+## 🌐 Deployment (Netlify)
+
+### Build settings:
+
+- **Build command:**
+
+  ```
+  npm run build
+  ```
+
+- **Publish directory:**
+
+  ```
+  dist
+  ```
+
+### SPA Redirect (Important)
+
+Create:
+
+```
+public/_redirects
+```
+
+Add:
+
+```
+/* /index.html 200
+```
+
+---
+
+## 📁 Project Structure
+
+```
+ADMIN-DASHBOARD-MAIN/
+├─ dist/                 # Production build output
+├─ node_modules/         # Dependencies
+├─ public/               # Static assets (e.g., vite.svg, _redirects)
+├─ src/
+│   ├─ assets/           # Images, icons, static files
+│   ├─ components/       # Reusable React components
+│   ├─ context/          # React Context providers
+│   ├─ hooks/            # Custom hooks
+│   ├─ pages/            # Full pages/screens (Home, Users, NotFound)
+│   ├─ routes/           # Route configuration (optional)
+│   ├─ services/         # API or backend service calls
+│   ├─ App.css
+│   ├─ App.tsx
+│   ├─ index.css
+│   └─ main.tsx
+├─ .env                  # Environment variables (Supabase keys)
+├─ .gitignore
+├─ eslint.config.js
+├─ index.html
+├─ netlify.toml          # Netlify build config
+├─ package.json
+├─ package-lock.json
+├─ README.md
+├─ tsconfig.app.json
+├─ tsconfig.json
+├─ tsconfig.node.json
+└─ vite.config.ts
+```
+
+---
+
+## ⚠️ Environment Variables
+
+Create a `.env` file:
+
+```
+VITE_SUPABASE_URL=your_url
+VITE_SUPABASE_ANON_KEY=your_key
+```
+
+---
+
+## ✨ Future Improvements
+
+- Audit logs for admin actions
+- Advanced analytics dashboard
+- Multi-language support
+- Performance optimizations
+
+---
+
+## 👤 Author
+
+Your Name
+GitHub: https://github.com/pulijedemko
+
+---
+
+## Live Demo
+
+## Check out the live version of this project [here](https://celadon-bubblegum-17d9bf.netlify.app/).
+
+## 📄 License
+
+This project is licensed under the MIT License.
