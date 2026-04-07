@@ -12,7 +12,9 @@ const HeroBanner = () => {
           interface.
         </p>
         <button className="w-fit bg-blue-500 text-white px-4 py-2 rounded ">
-          Get Started
+          <a href="/signin" className="text-white no-underline">
+            Get Started
+          </a>
         </button>
       </div>
       <div className="w-1/2 ">
