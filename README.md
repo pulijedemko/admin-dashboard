@@ -199,6 +199,12 @@ GitHub: https://github.com/pulijedemko
 ## Live Demo
 
 ## Check out the live version of this project [here](https://celadon-bubblegum-17d9bf.netlify.app/).
+## Login as admin with credentials 
+  Email: admin@gmail.com
+  Password: admin1234
+## Login as user with credentials 
+  Email: user@gmail.com
+  Password: user1234
 
 ## 📄 License
 
