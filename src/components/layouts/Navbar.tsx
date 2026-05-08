@@ -12,7 +12,12 @@ export const Navbar = () => {
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    navigate("/signin");
+    navigate("/");
+  };
+
+  const getHomeLink = () => {
+    if (!user) return "/";
+    return user.role === "admin" ? "/admin" : "/user";
   };
 
   return (
@@ -24,7 +29,7 @@ export const Navbar = () => {
       transition-colors duration-300"
     >
       {/* Logo */}
-      <Link to={user ? "/dashboard" : "/"}>
+      <Link to={getHomeLink()}>
         <img src={Logo} alt="logo" className="h-12 w-12" />
       </Link>
 
@@ -33,12 +38,25 @@ export const Navbar = () => {
         <div className="flex items-center gap-4">
           <DarkModeToggle />
 
+          {/* Role-based navigation */}
+          {user.role === "admin" && (
+            <Link to="/admin" className="hover:text-blue-500 transition">
+              Admin
+            </Link>
+          )}
+
+          {user.role === "user" && (
+            <Link to="/user" className="hover:text-blue-500 transition">
+              Dashboard
+            </Link>
+          )}
+
+          {/* Logout */}
           <button
             onClick={handleLogout}
             className="px-3 py-1 rounded-md
               text-gray-700 dark:text-gray-300
-              hover:text-red-500
-              transition"
+              hover:text-red-500 transition"
           >
             Logout
           </button>
@@ -56,8 +74,7 @@ export const Navbar = () => {
             to="/signup"
             className="px-3 py-1 rounded-md
               bg-blue-600 text-white
-              hover:bg-blue-700
-              transition"
+              hover:bg-blue-700 transition"
           >
             Sign Up
           </Link>

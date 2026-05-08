@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { supabase } from "../../services/supabaseClient";
 
-const signInUpForm = () => {
+const SignInUpForm = () => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
 
@@ -15,7 +15,9 @@ const signInUpForm = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // SIGN UP
+    // =========================
+    // 🔐 SIGN UP
+    // =========================
     if (isSignUp) {
       const { data, error } = await supabase.auth.signUp({
         email,
@@ -32,7 +34,7 @@ const signInUpForm = () => {
         return;
       }
 
-      // ⭐ Insert user into your users table
+      // Save user in your table
       if (data.user) {
         await supabase.from("users").insert([
           {
@@ -43,22 +45,47 @@ const signInUpForm = () => {
           },
         ]);
       }
+
+      // ✅ redirect normal users after signup
+      navigate("/user");
+      return;
     }
 
-    // SIGN IN
-    else {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
+    // =========================
+    // 🔑 SIGN IN
+    // =========================
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
 
-      if (error) {
-        alert(error.message);
-        return;
-      }
+    if (error) {
+      alert(error.message);
+      return;
     }
 
-    navigate("/dashboard");
+    if (!data.user) return;
+
+    // 🔥 get user role from DB
+    const { data: profile, error: profileError } = await supabase
+      .from("users")
+      .select("role")
+      .eq("id", data.user.id)
+      .single();
+
+    if (profileError) {
+      alert(profileError.message);
+      return;
+    }
+
+    // =========================
+    // 🚀 ROLE-BASED REDIRECT
+    // =========================
+    if (profile?.role === "admin") {
+      navigate("/admin");
+    } else {
+      navigate("/user");
+    }
   };
 
   return (
@@ -68,6 +95,7 @@ const signInUpForm = () => {
       </h2>
 
       <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+        {/* Full Name (Sign Up only) */}
         {isSignUp && (
           <div className="flex flex-col gap-2">
             <label className="text-lg text-gray-800">Full Name</label>
@@ -82,6 +110,7 @@ const signInUpForm = () => {
           </div>
         )}
 
+        {/* Email */}
         <div className="flex flex-col gap-2">
           <label className="text-lg text-gray-800">Email</label>
           <input
@@ -94,6 +123,7 @@ const signInUpForm = () => {
           />
         </div>
 
+        {/* Password */}
         <div className="flex flex-col gap-2">
           <label className="text-lg text-gray-800">Password</label>
           <input
@@ -106,6 +136,7 @@ const signInUpForm = () => {
           />
         </div>
 
+        {/* Submit */}
         <button
           type="submit"
           className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition"
@@ -113,21 +144,27 @@ const signInUpForm = () => {
           {isSignUp ? "Sign Up" : "Sign In"}
         </button>
       </form>
-      {!isSignUp && (
-        <div className="flex flex-col gap-2 text-center">
-          <p className="text-sm text-gray-600">
+
+      {/* Switch auth */}
+      <div className="text-center text-sm text-gray-600">
+        {isSignUp ? (
+          <p>
+            Already have an account?{" "}
+            <Link to="/signin" className="text-blue-600 hover:underline">
+              Sign In
+            </Link>
+          </p>
+        ) : (
+          <p>
             Don't have an account?{" "}
-            <Link
-              to="/signup"
-              className="text-blue-600 cursor-pointer hover:underline"
-            >
+            <Link to="/signup" className="text-blue-600 hover:underline">
               Sign Up
             </Link>
           </p>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };
 
-export default signInUpForm;
+export default SignInUpForm;

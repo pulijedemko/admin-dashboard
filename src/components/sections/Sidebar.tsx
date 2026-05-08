@@ -4,9 +4,9 @@ import { useAuth } from "../../context/AuthContext";
 
 const Sidebar = () => {
   const { user } = useAuth();
-  const { data: userProfile } = useCurrentUser(user.id);
   const location = useLocation();
-  const { data: getProfile } = useCurrentUser(user?.id);
+
+  const { data: userProfile } = useCurrentUser(user?.id);
 
   const isAdmin = userProfile?.role === "admin";
 
@@ -16,6 +16,8 @@ const Sidebar = () => {
         ? "bg-blue-600 text-white"
         : "text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
     }`;
+
+  if (!user) return null;
 
   return (
     <div
@@ -31,15 +33,17 @@ const Sidebar = () => {
         </h2>
 
         <nav className="flex flex-col gap-2">
-          <Link to="/dashboard" className={linkStyle("/dashboard")}>
+          {/* Dashboard */}
+          <Link
+            to={isAdmin ? "/admin" : "/user"}
+            className={linkStyle(isAdmin ? "/admin" : "/user")}
+          >
             Dashboard
           </Link>
 
+          {/* Admin-only links */}
           {isAdmin && (
-            <Link
-              to="/dashboard/users"
-              className={linkStyle("/dashboard/users")}
-            >
+            <Link to="/admin/users" className={linkStyle("/admin/users")}>
               Users
             </Link>
           )}
@@ -49,15 +53,15 @@ const Sidebar = () => {
       {/* BOTTOM */}
       <div className="pt-6 border-t border-gray-200 dark:border-gray-700">
         <Link
-          to="/dashboard/profile"
-          className={linkStyle("/dashboard/profile")}
+          to={isAdmin ? "/admin/profile" : "/user/profile"}
+          className="flex items-center gap-3"
         >
           <img
-            src={getProfile?.avatar || "/default-avatar.png"}
+            src={userProfile?.avatar || "/default-avatar.png"}
             alt="Profile"
             className="w-10 h-10 rounded-full object-cover border border-gray-200 dark:border-gray-600"
           />
-          Profile
+          <span className="text-gray-700 dark:text-gray-300">Profile</span>
         </Link>
       </div>
     </div>
